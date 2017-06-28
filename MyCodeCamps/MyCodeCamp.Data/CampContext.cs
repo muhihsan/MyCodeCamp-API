@@ -12,9 +12,9 @@ namespace MyCodeCamp.Data
 {
   public class CampContext : IdentityDbContext
   {
-    private IConfigurationRoot _config;
+    private IConfiguration _config;
 
-    public CampContext(DbContextOptions options, IConfigurationRoot config)
+    public CampContext(DbContextOptions options, IConfiguration config)
       : base(options)
     {
       _config = config;
