@@ -34,20 +34,17 @@ namespace MyCodeCamp
             
             services.AddMvc();
 
-            // Build the intermediate service provider
-            var serviceProvider = services.BuildServiceProvider();
-
-            var seeder = serviceProvider.GetService<CampDbInitializer>();
-            seeder.Seed().Wait();
-            
-            //return the provider
-            return serviceProvider;
+            // Build the intermediate service provider then return it
+            return services.BuildServiceProvider();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider serviceProvider)
         {
             app.UseMvc();
+
+            var seeder = serviceProvider.GetService<CampDbInitializer>();
+            seeder.Seed().Wait();
         }
     }
 }
