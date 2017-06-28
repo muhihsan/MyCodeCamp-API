@@ -12,8 +12,6 @@ namespace MyCodeCamp.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var camps = null;
-
             return Ok("Ihsan");
         }
     }
