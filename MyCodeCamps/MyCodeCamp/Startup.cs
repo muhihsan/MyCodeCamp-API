@@ -23,15 +23,25 @@ namespace MyCodeCamp
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton(_configuration);
 
             var connectionString = _configuration["Data:ConnectionString"];
             services.AddDbContext<CampContext>(ServiceLifetime.Scoped);
             services.AddScoped<ICampRepository, CampRepository>();
-
+            services.AddTransient<CampDbInitializer>();
+            
             services.AddMvc();
+
+            // Build the intermediate service provider
+            var serviceProvider = services.BuildServiceProvider();
+
+            var seeder = serviceProvider.GetService<CampDbInitializer>();
+            seeder.Seed().Wait();
+            
+            //return the provider
+            return serviceProvider;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
