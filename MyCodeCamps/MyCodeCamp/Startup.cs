@@ -26,8 +26,7 @@ namespace MyCodeCamp
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton(_configuration);
-
-            var connectionString = _configuration["Data:ConnectionString"];
+            
             services.AddDbContext<CampContext>(ServiceLifetime.Scoped);
             services.AddScoped<ICampRepository, CampRepository>();
             services.AddTransient<CampDbInitializer>();
