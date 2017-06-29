@@ -6,6 +6,8 @@ using MyCodeCamp.Data;
 using Newtonsoft.Json;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Hosting;
 
 namespace MyCodeCamp
 {
@@ -13,9 +15,12 @@ namespace MyCodeCamp
     {
         public IConfiguration _configuration { get; }
 
-        public Startup(IConfiguration configuration)
+        private IHostingEnvironment _env;
+
+        public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
             _configuration = configuration;
+            _env = env;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -31,11 +36,17 @@ namespace MyCodeCamp
 
             services.AddAutoMapper();
 
-            services.AddMvc()
-                .AddJsonOptions(opt =>
-                {
-                    opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                });
+            services.AddMvc(opt => 
+            {
+                if (!_env.IsProduction())
+                    opt.SslPort = 44359;
+
+                opt.Filters.Add(new RequireHttpsAttribute());
+            })
+            .AddJsonOptions(opt =>
+            {
+                opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            });
 
             // Build the intermediate service provider then return it
             return services.BuildServiceProvider();
