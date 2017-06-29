@@ -16,11 +16,12 @@ namespace MyCodeCamp.Models
         public string PhoneNumber { get; set; }
         public string WebsiteUrl { get; set; }
         public string TwitterName { get; set; }
-        public string GitHubName { get; set; }
+        public string GitHubName { get; set; } 
         [Required]
         [MinLength(25)]
         [MaxLength(4000)]
         public string Bio { get; set; }
         public string HeadShotUrl { get; set; }
+        public ICollection<TalkModel> Talks { get; set; }
     }
 }
