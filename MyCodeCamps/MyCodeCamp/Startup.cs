@@ -33,8 +33,26 @@ namespace MyCodeCamp
             services.AddTransient<CampDbInitializer>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
             services.AddAutoMapper();
+
+            services.AddCors(cfg => 
+            {
+                cfg.AddPolicy("MIhsanOnly", policy =>
+                {
+                    policy
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .WithOrigins("http://github.com/muhihsan");
+                });
+
+                cfg.AddPolicy("AnyGET", policy =>
+                {
+                    policy
+                        .AllowAnyHeader()
+                        .WithMethods("GET")
+                        .AllowAnyOrigin();
+                });
+            });
 
             services.AddMvc(opt => 
             {

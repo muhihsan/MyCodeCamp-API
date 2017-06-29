@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MyCodeCamp.Data;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace MyCodeCamp.Controllers
 {
+    [EnableCors("AnyGET")]
     [Route("api/[controller]")]
     [ValidateModel]
     public class CampsController : BaseController
@@ -50,6 +52,7 @@ namespace MyCodeCamp.Controllers
             return Ok(_mapper.Map<CampModel>(camp));
         }
 
+        [EnableCors("MIhsanOnly")]
         [HttpPost]
         public async Task<IActionResult> PostAsync([FromBody] CampModel model)
         {
@@ -74,6 +77,7 @@ namespace MyCodeCamp.Controllers
             return BadRequest();
         }
 
+        [EnableCors("MIhsanOnly")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] CampModel model)
         {
@@ -95,6 +99,7 @@ namespace MyCodeCamp.Controllers
             return BadRequest("Couldn't update camp");
         }
 
+        [EnableCors("MIhsanOnly")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
