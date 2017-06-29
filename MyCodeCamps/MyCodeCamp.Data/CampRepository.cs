@@ -98,6 +98,15 @@ namespace MyCodeCamp.Data
               .ToList();
         }
 
+        public IEnumerable<Speaker> GetSpeakersByCampId(int campId)
+        {
+            return _context.Speakers
+              .Include(s => s.Camp)
+              .Where(s => s.Camp.Id == campId)
+              .OrderBy(s => s.Name)
+              .ToList();
+        }
+
         public IEnumerable<Speaker> GetSpeakersByMoniker(string moniker)
         {
             return _context.Speakers
