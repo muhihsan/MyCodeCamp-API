@@ -54,6 +54,9 @@ namespace MyCodeCamp.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
                 _logger.LogInformation("Creating a new Code Camp");
 
                 var camp = _mapper.Map<Camp>(model);
