@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MyCodeCamp.Data;
 using MyCodeCamp.Data.Entities;
+using MyCodeCamp.Filters;
 using MyCodeCamp.Models;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 namespace MyCodeCamp.Controllers
 {
     [Route("api/camps/{campId}/speakers")]
+    [ValidateModel]
     public class SpeakersController : BaseController
     {
         private ICampRepository _repository;
@@ -48,7 +50,7 @@ namespace MyCodeCamp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostAsync(int campId, [FromBody] SpeakerModel model)
+        public async Task<IActionResult> Post(int campId, [FromBody] SpeakerModel model)
         {
             try
             {
