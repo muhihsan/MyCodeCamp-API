@@ -66,7 +66,7 @@ namespace MyCodeCamp.Controllers
 
             return BadRequest();
         }
-        
+
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] Camp model)
         {
@@ -78,7 +78,7 @@ namespace MyCodeCamp.Controllers
 
                 oldCamp.Name = model.Name ?? oldCamp.Name;
                 oldCamp.Description = model.Description ?? oldCamp.Description;
-                oldCamp.Location = model.Location?? oldCamp.Location;
+                oldCamp.Location = model.Location ?? oldCamp.Location;
                 oldCamp.Length = model.Length > 0 ? model.Length : oldCamp.Length;
                 oldCamp.EventDate = model.EventDate != DateTime.MinValue ? model.EventDate : oldCamp.EventDate;
 
@@ -90,6 +90,27 @@ namespace MyCodeCamp.Controllers
             }
 
             return BadRequest("Couldn't update camp");
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                var oldCamp = _repo.GetCamp(id);
+                if (oldCamp == null)
+                    return NotFound($"Could not find a camp with an ID of {id}");
+
+                _repo.Delete(oldCamp);
+
+                if (await _repo.SaveAllAsync())
+                    return Ok();
+            }
+            catch (Exception)
+            {
+            }
+
+            return BadRequest("Couldn't delete camp");
         }
     }
 }
