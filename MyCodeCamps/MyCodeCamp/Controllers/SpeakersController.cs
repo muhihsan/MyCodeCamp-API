@@ -28,7 +28,7 @@ namespace MyCodeCamp.Controllers
         [HttpGet]
         public IActionResult Get(int campId)
         {
-            var speakers = _repository.GetSpeakersByCampId(campId);
+            var speakers = _repository.GetSpeakers(campId);
 
             return Ok(_mapper.Map<IEnumerable<SpeakerModel>>(speakers));
         }
