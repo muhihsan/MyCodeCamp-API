@@ -98,7 +98,33 @@ namespace MyCodeCamp.Controllers
                 _logger.LogError($"Exception thrown while updating speaker: {ex}");
             }
 
-            return BadRequest("Could not update new speaker");
+            return BadRequest("Could not update speaker");
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int campId, int id)
+        {
+            try
+            {
+                var speaker = _repository.GetSpeaker(id);
+
+                if (speaker == null)
+                    return NotFound();
+
+                if (speaker.Camp.Id != campId)
+                    return BadRequest("Speaker and camp do not match");
+
+                _repository.Delete(speaker);
+
+                if (await _repository.SaveAllAsync())
+                    return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception thrown while deleting speaker: {ex}");
+            }
+
+            return BadRequest("Could not delete speaker");
         }
     }
 }
