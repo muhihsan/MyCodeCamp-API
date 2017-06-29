@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MyCodeCamp.Data;
+using MyCodeCamp.Data.Entities;
 using MyCodeCamp.Models;
 using System;
 using System.Collections.Generic;
@@ -44,6 +45,31 @@ namespace MyCodeCamp.Controllers
                 return BadRequest("Speaker not in specified camp");
 
             return Ok(_mapper.Map<SpeakerModel>(speaker));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PostAsync(int campId, [FromBody] SpeakerModel model)
+        {
+            try
+            {
+                var camp = _repository.GetCamp(campId);
+                if (camp == null)
+                    return BadRequest("Could not find camp");
+
+                var speaker = _mapper.Map<Speaker>(model);
+                speaker.Camp = camp;
+
+                _repository.Add(speaker);
+
+                if (await _repository.SaveAllAsync())
+                    return Created(Url.Link("SpeakerGet", new { campId = camp.Id, id = speaker.Id }), _mapper.Map<SpeakerModel>(speaker));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception thrown while adding speakers: {ex}");
+            }
+
+            return BadRequest("Could not add new speaker");
         }
     }
 }
