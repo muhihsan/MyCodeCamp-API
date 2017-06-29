@@ -23,7 +23,7 @@ namespace MyCodeCamp.Models
         public string Resolve(Talk source, TalkModel destination, string destMember, ResolutionContext context)
         {
             var helper = (IUrlHelper)_httpContextAccessor.HttpContext.Items[BaseController.URLHELPER];
-            return helper.Link("GetTalk", new { moniker = source.Speaker.Camp.Moniker, speakerId = source.Speaker.Id, id = source.Id });
+            return helper.Link("GetTalk", new { campId = source.Speaker.Camp.Id, speakerId = source.Speaker.Id, id = source.Id });
         }
     }
 }

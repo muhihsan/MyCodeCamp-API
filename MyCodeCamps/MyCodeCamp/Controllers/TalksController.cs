@@ -48,7 +48,7 @@ namespace MyCodeCamp.Controllers
             return Ok(_mapper.Map<TalkModel>(talk));
         }
 
-        [HttpPost()]
+        [HttpPost]
         public async Task<IActionResult> Post(int campId, int speakerId, [FromBody] TalkModel model)
         {
             try
