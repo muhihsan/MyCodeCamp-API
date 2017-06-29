@@ -11,7 +11,9 @@ namespace MyCodeCamp.Models
     {
         public CampMappingProfile()
         {
-            CreateMap<Camp, CampModel>();
+            CreateMap<Camp, CampModel>()
+                .ForMember(c => c.StartDate, opt => opt.MapFrom(camp => camp.EventDate))
+                .ForMember(c => c.EndDate, opt => opt.MapFrom(camp => camp.EventDate.AddDays(camp.Length - 1)));
         }
     }
 }
