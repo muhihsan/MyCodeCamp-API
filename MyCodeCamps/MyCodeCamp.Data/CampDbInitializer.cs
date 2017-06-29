@@ -8,26 +8,26 @@ using MyCodeCamp.Data.Entities;
 
 namespace MyCodeCamp.Data
 {
-  public class CampDbInitializer
-  {
-    private CampContext _ctx;
-
-    public CampDbInitializer(CampContext ctx)
+    public class CampDbInitializer
     {
-      _ctx = ctx;
-    }
+        private CampContext _ctx;
 
-    public async Task Seed()
-    {
-      if (!_ctx.Camps.Any())
-      {
-        // Add Data
-        _ctx.AddRange(_sample);
-        await _ctx.SaveChangesAsync();
-      }
-    }
+        public CampDbInitializer(CampContext ctx)
+        {
+            _ctx = ctx;
+        }
 
-    List<Camp> _sample = new List<Camp>
+        public async Task Seed()
+        {
+            if (!_ctx.Camps.Any())
+            {
+                // Add Data
+                _ctx.AddRange(_sample);
+                await _ctx.SaveChangesAsync();
+            }
+        }
+
+        List<Camp> _sample = new List<Camp>
     {
       new Camp()
       {
@@ -107,5 +107,5 @@ namespace MyCodeCamp.Data
       }
     };
 
-  }
+    }
 }
