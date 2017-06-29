@@ -55,6 +55,7 @@ namespace MyCodeCamp.Controllers
             try
             {
                 var camp = _repository.GetCamp(campId);
+
                 if (camp == null)
                     return BadRequest("Could not find camp");
 
@@ -68,10 +69,36 @@ namespace MyCodeCamp.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Exception thrown while adding speakers: {ex}");
+                _logger.LogError($"Exception thrown while adding speaker: {ex}");
             }
 
             return BadRequest("Could not add new speaker");
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put(int campId, int id, [FromBody] SpeakerModel model)
+        {
+            try
+            {
+                var speaker = _repository.GetSpeaker(id);
+
+                if (speaker == null)
+                    return NotFound();
+
+                if (speaker.Camp.Id != campId)
+                    return BadRequest("Speaker and camp do not match");
+
+                _mapper.Map(model, speaker);
+
+                if (await _repository.SaveAllAsync())
+                    return Ok(_mapper.Map<SpeakerModel>(speaker));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception thrown while updating speaker: {ex}");
+            }
+
+            return BadRequest("Could not update new speaker");
         }
     }
 }
