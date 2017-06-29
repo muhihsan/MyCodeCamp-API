@@ -50,16 +50,18 @@ namespace MyCodeCamp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostAsync([FromBody] Camp model)
+        public async Task<IActionResult> PostAsync([FromBody] CampModel model)
         {
             try
             {
                 _logger.LogInformation("Creating a new Code Camp");
 
+                var camp = _mapper.Map<Camp>(model);
+
                 _repo.Add(model);
 
                 if (await _repo.SaveAllAsync())
-                    return Created(Url.Link("CampGet", new { id = model.Id }), model);
+                    return Created(Url.Link("CampGet", new { id = camp.Id }), _mapper.Map<CampModel>(camp));
                 else
                     _logger.LogWarning("Could not save Camp to the database");
             }
