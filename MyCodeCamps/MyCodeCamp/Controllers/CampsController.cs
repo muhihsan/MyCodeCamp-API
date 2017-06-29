@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace MyCodeCamp.Controllers
 {
     [Route("api/[controller]")]
-    public class CampsController : Controller
+    public class CampsController : BaseController
     {
         private ICampRepository _repo;
         private ILogger<CampsController> _logger;

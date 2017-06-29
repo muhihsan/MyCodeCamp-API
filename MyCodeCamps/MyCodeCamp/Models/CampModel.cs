@@ -7,7 +7,7 @@ namespace MyCodeCamp.Models
 {
     public class CampModel
     {
-        public int Id { get; set; }
+        public string Url { get; set; }
         public string Moniker { get; set; }
         public string Name { get; set; }
         public DateTime StartDate { get; set; }

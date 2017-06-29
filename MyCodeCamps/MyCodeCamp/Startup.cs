@@ -12,6 +12,7 @@ using MyCodeCamp.Data;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 
 namespace MyCodeCamp
 {
@@ -32,6 +33,8 @@ namespace MyCodeCamp
             services.AddDbContext<CampContext>(ServiceLifetime.Scoped);
             services.AddScoped<ICampRepository, CampRepository>();
             services.AddTransient<CampDbInitializer>();
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddAutoMapper();
 
