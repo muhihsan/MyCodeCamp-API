@@ -26,7 +26,7 @@ namespace MyCodeCamp.Controllers
             return Ok(camps);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "CampGet")]
         public IActionResult Get(int id, bool includeSpeakers = false)
         {
             Camp camp = null;
@@ -40,6 +40,21 @@ namespace MyCodeCamp.Controllers
                 return NotFound($"Camp {id} was not found.");
 
             return Ok(camp);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PostAsync([FromBody] Camp model)
+        {
+            try
+            {
+                _repo.Add(model);
+
+                if (await _repo.SaveAllAsync())
+                    return Created(Url.Link("CampGet", new { id = model.Id }), model);
+            }
+            catch { }
+
+            return BadRequest();
         }
     }
 }
