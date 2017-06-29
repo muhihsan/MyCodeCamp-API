@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MyCodeCamp.Data;
+using MyCodeCamp.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,10 +29,10 @@ namespace MyCodeCamp.Controllers
         {
             var speakers = _repository.GetSpeakersByCampId(campId);
 
-            return Ok(speakers);
+            return Ok(_mapper.Map<IEnumerable<SpeakerModel>>(speakers));
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "SpeakerGet")]
         public IActionResult Get(int campId, int id)
         {
             var speaker = _repository.GetSpeaker(id);
@@ -42,7 +43,7 @@ namespace MyCodeCamp.Controllers
             if (speaker.Camp.Id != campId)
                 return BadRequest("Speaker not in specified camp");
 
-            return Ok(speaker);
+            return Ok(_mapper.Map<SpeakerModel>(speaker));
         }
     }
 }
