@@ -77,22 +77,21 @@ namespace MyCodeCamp.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] Camp model)
+        public async Task<IActionResult> Put(int id, [FromBody] CampModel model)
         {
             try
             {
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
                 var oldCamp = _repo.GetCamp(id);
                 if (oldCamp == null)
                     return NotFound($"Could not find a camp with an ID of {id}");
 
-                oldCamp.Name = model.Name ?? oldCamp.Name;
-                oldCamp.Description = model.Description ?? oldCamp.Description;
-                oldCamp.Location = model.Location ?? oldCamp.Location;
-                oldCamp.Length = model.Length > 0 ? model.Length : oldCamp.Length;
-                oldCamp.EventDate = model.EventDate != DateTime.MinValue ? model.EventDate : oldCamp.EventDate;
+                _mapper.Map(model, oldCamp);
 
                 if (await _repo.SaveAllAsync())
-                    return Ok(oldCamp);
+                    return Ok(_mapper.Map<CampModel>(oldCamp));
             }
             catch (Exception)
             {
