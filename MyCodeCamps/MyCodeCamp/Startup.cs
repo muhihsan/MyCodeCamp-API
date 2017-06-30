@@ -11,6 +11,10 @@ using Microsoft.AspNetCore.Hosting;
 using MyCodeCamp.Data.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using MyCodeCamp.Services.AppSettings;
+using Microsoft.AspNetCore.Mvc.Versioning;
+using MyCodeCamp.Controllers;
+using Microsoft.AspNetCore.Mvc.Versioning.Conventions;
+using MyCodeCamp.Models;
 
 namespace MyCodeCamp
 {
@@ -125,6 +129,13 @@ namespace MyCodeCamp
                 cfg.ReportApiVersions = true;
                 cfg.DefaultApiVersion = new ApiVersion(1, 1);
                 cfg.AssumeDefaultVersionWhenUnspecified = true;
+                cfg.ApiVersionReader = new HeaderApiVersionReader("ver", "X-MyCodeCamp-Version");
+                cfg.Conventions.Controller<TalksController>()
+                    .HasApiVersion(new ApiVersion(1, 0))
+                    .HasApiVersion(new ApiVersion(1, 1))
+                    .HasApiVersion(new ApiVersion(2, 0))
+                    .Action(mbox => mbox.Post(default(int), default(int), default(TalkModel)))
+                        .MapToApiVersion(new ApiVersion(2, 0));
             });
 
             // Build the intermediate service provider then return it
