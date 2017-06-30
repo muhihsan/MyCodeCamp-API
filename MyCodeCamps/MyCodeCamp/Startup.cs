@@ -8,6 +8,10 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Hosting;
+using MyCodeCamp.Data.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Threading.Tasks;
 
 namespace MyCodeCamp
 {
@@ -31,9 +35,35 @@ namespace MyCodeCamp
             services.AddDbContext<CampContext>(ServiceLifetime.Scoped);
             services.AddScoped<ICampRepository, CampRepository>();
             services.AddTransient<CampDbInitializer>();
+            services.AddTransient<CampIdentityInitializer>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddAutoMapper();
+
+            //services.AddIdentity<CampUser, IdentityRole>()
+            //    .AddEntityFrameworkStores<CampContext>();
+
+            //services.Configure<IdentityOptions>(config =>
+            //{
+            //    config.Cookies.ApplicationCookie.Events =
+            //        new CookieAuthenticationEvents
+            //        {
+            //            OnRedirectToLogin = (ctx) =>
+            //            {
+            //                if (ctx.Request.Path.StartsWithSegments("/api") && ctx.Response.StatusCode == 200)
+            //                    ctx.Response.StatusCode = 401;
+
+            //                return Task.CompletedTask;
+            //            },
+            //            OnRedirectToAccessDenied = (ctx) =>
+            //            {
+            //                if (ctx.Request.Path.StartsWithSegments("/api") && ctx.Response.StatusCode == 200)
+            //                    ctx.Response.StatusCode = 403;
+
+            //                return Task.CompletedTask;
+            //            },
+            //        };
+            //});
 
             services.AddCors(cfg => 
             {
@@ -73,10 +103,15 @@ namespace MyCodeCamp
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IServiceProvider serviceProvider)
         {
+            //app.UseIdentity();
+
             app.UseMvc();
 
             var seeder = serviceProvider.GetService<CampDbInitializer>();
             seeder.Seed().Wait();
+
+            //var identitySeeder = serviceProvider.GetService<CampIdentityInitializer>();
+            //identitySeeder.Seed().Wait();
         }
     }
 }

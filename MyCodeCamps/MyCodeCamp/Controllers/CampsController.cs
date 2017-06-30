@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace MyCodeCamp.Controllers
 {
+    //[Authorize]
     [EnableCors("AnyGET")]
     [Route("api/[controller]")]
     [ValidateModel]
