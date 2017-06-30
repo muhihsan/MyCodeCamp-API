@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Identity;
 
 namespace MyCodeCamp
 {
@@ -126,6 +127,7 @@ namespace MyCodeCamp
             
             services.AddApiVersioning(cfg =>
             {
+                cfg.ReportApiVersions = true;
                 cfg.DefaultApiVersion = new ApiVersion(1, 1);
                 cfg.AssumeDefaultVersionWhenUnspecified = true;
             });
