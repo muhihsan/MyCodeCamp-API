@@ -48,6 +48,11 @@ namespace MyCodeCamp
             services.AddIdentity<CampUser, IdentityRole>()
                 .AddEntityFrameworkStores<CampContext>();
 
+            services.AddAuthorization(cfg => 
+            {
+                cfg.AddPolicy("SuperUser", p => p.RequireClaim("SuperUser", "True"));
+            });
+
             services.AddJwtBearerAuthentication(options => 
             {
                 options.TokenValidationParameters = new TokenValidationParameters
