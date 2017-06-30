@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace MyCodeCamp.Services.AppSettings
+﻿namespace MyCodeCamp.Services.AppSettings
 {
     public class JWTTokenOptions
     {

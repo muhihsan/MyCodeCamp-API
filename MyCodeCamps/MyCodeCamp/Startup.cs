@@ -11,11 +11,6 @@ using Microsoft.AspNetCore.Hosting;
 using MyCodeCamp.Data.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using MyCodeCamp.Services.AppSettings;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Microsoft.AspNetCore.Identity;
 
 namespace MyCodeCamp
 {
