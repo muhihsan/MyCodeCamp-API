@@ -123,6 +123,12 @@ namespace MyCodeCamp
             {
                 opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
+            
+            services.AddApiVersioning(cfg =>
+            {
+                cfg.DefaultApiVersion = new ApiVersion(1, 1);
+                cfg.AssumeDefaultVersionWhenUnspecified = true;
+            });
 
             // Build the intermediate service provider then return it
             return services.BuildServiceProvider();
@@ -137,6 +143,8 @@ namespace MyCodeCamp
 
             app.UseMvc();
 
+            app.UseApiVersioning();
+            
             var seeder = serviceProvider.GetService<CampDbInitializer>();
             seeder.Seed().Wait();
 
