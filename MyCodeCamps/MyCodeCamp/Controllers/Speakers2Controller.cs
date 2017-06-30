@@ -28,7 +28,7 @@ namespace MyCodeCamp.Controllers
                 {
                     currentTime = DateTime.UtcNow,
                     count = speakers.Count(),
-                    results = _mapper.Map<IEnumerable<SpeakerModel>>(speakers)
+                    results = _mapper.Map<IEnumerable<Speaker2Model>>(speakers)
                 });
         }
     }
