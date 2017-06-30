@@ -10,8 +10,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Hosting;
 using MyCodeCamp.Data.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using System.Threading.Tasks;
+using MyCodeCamp.Services.AppSettings;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace MyCodeCamp
 {
@@ -30,6 +33,8 @@ namespace MyCodeCamp
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            services.Configure<JWTTokenOptions>(options => _configuration.GetSection("Token").Bind(options));
+
             services.AddSingleton(_configuration);
             
             services.AddDbContext<CampContext>(ServiceLifetime.Scoped);
@@ -42,6 +47,24 @@ namespace MyCodeCamp
 
             services.AddIdentity<CampUser, IdentityRole>()
                 .AddEntityFrameworkStores<CampContext>();
+
+            services.AddJwtBearerAuthentication(options => 
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidIssuer = _configuration["Token:Issuer"],
+                    ValidAudience = _configuration["Token:Audience"],
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Token:Key"])),
+                    ValidateLifetime = true
+                };
+            });
+
+            services.AddAuthentication(o =>
+            {
+                o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            });
 
             //services.Configure<IdentityOptions>(config =>
             //{
@@ -104,6 +127,8 @@ namespace MyCodeCamp
         public void Configure(IApplicationBuilder app, IServiceProvider serviceProvider)
         {
             //app.UseIdentity();
+
+            //app.UseJwtBearerAuthentication();
 
             app.UseMvc();
 
