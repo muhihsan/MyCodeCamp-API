@@ -13,7 +13,7 @@ namespace MyCodeCamp.Controllers
     [ApiVersion("2.0")]
     public class Speakers2Controller : SpeakersController
     {
-        public Speakers2Controller(ICampRepository repository, ILogger<SpeakersController> logger, IMapper mapper) 
+        public Speakers2Controller(ICampRepository repository, ILogger<SpeakersController> logger, IMapper mapper)
             : base(repository, logger, mapper)
         {
         }

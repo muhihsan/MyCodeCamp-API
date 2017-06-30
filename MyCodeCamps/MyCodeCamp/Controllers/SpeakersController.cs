@@ -29,14 +29,14 @@ namespace MyCodeCamp.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
-        [MapToApiVersion("1.0")]
-        public IActionResult Get(int campId, bool includeTalks)
-        {
-            var speakers = includeTalks ? _repository.GetSpeakersWithTalks(campId) : _repository.GetSpeakers(campId);
+        //[HttpGet]
+        //[MapToApiVersion("1.0")]
+        //public IActionResult Get(int campId, bool includeTalks)
+        //{
+        //    var speakers = includeTalks ? _repository.GetSpeakersWithTalks(campId) : _repository.GetSpeakers(campId);
 
-            return Ok(_mapper.Map<IEnumerable<SpeakerModel>>(speakers));
-        }
+        //    return Ok(_mapper.Map<IEnumerable<SpeakerModel>>(speakers));
+        //}
 
         [HttpGet]
         [MapToApiVersion("1.1")]
