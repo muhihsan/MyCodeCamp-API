@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace MyCodeCamp.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [EnableCors("AnyGET")]
     [Route("api/[controller]")]
     [ValidateModel]
@@ -55,7 +55,7 @@ namespace MyCodeCamp.Controllers
         }
 
         [EnableCors("MIhsanOnly")]
-        [Authorize(Policy = "SuperUser")]
+        //[Authorize(Policy = "SuperUser")]
         [HttpPost]
         public async Task<IActionResult> PostAsync([FromBody] CampModel model)
         {

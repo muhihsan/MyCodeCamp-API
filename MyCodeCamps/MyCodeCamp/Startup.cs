@@ -48,28 +48,28 @@ namespace MyCodeCamp
             services.AddIdentity<CampUser, IdentityRole>()
                 .AddEntityFrameworkStores<CampContext>();
 
-            services.AddAuthorization(cfg => 
-            {
-                cfg.AddPolicy("SuperUser", p => p.RequireClaim("SuperUser", "True"));
-            });
+            //services.AddAuthorization(cfg => 
+            //{
+            //    cfg.AddPolicy("SuperUser", p => p.RequireClaim("SuperUser", "True"));
+            //});
 
-            services.AddJwtBearerAuthentication(options => 
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidIssuer = _configuration["Token:Issuer"],
-                    ValidAudience = _configuration["Token:Audience"],
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Token:Key"])),
-                    ValidateLifetime = true
-                };
-            });
+            //services.AddJwtBearerAuthentication(options => 
+            //{
+            //    options.TokenValidationParameters = new TokenValidationParameters
+            //    {
+            //        ValidIssuer = _configuration["Token:Issuer"],
+            //        ValidAudience = _configuration["Token:Audience"],
+            //        ValidateIssuerSigningKey = true,
+            //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Token:Key"])),
+            //        ValidateLifetime = true
+            //    };
+            //});
 
-            services.AddAuthentication(o =>
-            {
-                o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            });
+            //services.AddAuthentication(o =>
+            //{
+            //    o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            //    o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            //});
 
             //services.Configure<IdentityOptions>(config =>
             //{
