@@ -14,8 +14,11 @@ namespace MyCodeCamp.Controllers
 {
     //[Authorize]
     [EnableCors("AnyGET")]
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ValidateModel]
+    [ApiVersion("1.0")]
+    [ApiVersion("1.1")]
+    [ApiVersion("2.0")]
     public class CampsController : BaseController
     {
         private ICampRepository _repo;
