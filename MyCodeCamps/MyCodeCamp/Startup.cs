@@ -40,8 +40,8 @@ namespace MyCodeCamp
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddAutoMapper();
 
-            //services.AddIdentity<CampUser, IdentityRole>()
-            //    .AddEntityFrameworkStores<CampContext>();
+            services.AddIdentity<CampUser, IdentityRole>()
+                .AddEntityFrameworkStores<CampContext>();
 
             //services.Configure<IdentityOptions>(config =>
             //{
