@@ -7,12 +7,15 @@ using MyCodeCamp.Filters;
 using MyCodeCamp.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MyCodeCamp.Controllers
 {
     [Route("api/camps/{campId}/speakers")]
     [ValidateModel]
+    [ApiVersion("1.0")]
+    [ApiVersion("1.1")]
     public class SpeakersController : BaseController
     {
         private ICampRepository _repository;
@@ -27,11 +30,21 @@ namespace MyCodeCamp.Controllers
         }
 
         [HttpGet]
+        [MapToApiVersion("1.0")]
         public IActionResult Get(int campId, bool includeTalks)
         {
             var speakers = includeTalks ? _repository.GetSpeakersWithTalks(campId) : _repository.GetSpeakers(campId);
 
             return Ok(_mapper.Map<IEnumerable<SpeakerModel>>(speakers));
+        }
+
+        [HttpGet]
+        [MapToApiVersion("1.1")]
+        public IActionResult GetV11(int campId, bool includeTalks)
+        {
+            var speakers = includeTalks ? _repository.GetSpeakersWithTalks(campId) : _repository.GetSpeakers(campId);
+
+            return Ok(new { count = speakers.Count(), results = _mapper.Map<IEnumerable<SpeakerModel>>(speakers) });
         }
 
         [HttpGet("{id}", Name = "SpeakerGet")]
