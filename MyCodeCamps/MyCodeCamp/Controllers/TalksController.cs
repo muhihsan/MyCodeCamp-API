@@ -9,6 +9,8 @@ using MyCodeCamp.Data;
 using MyCodeCamp.Data.Entities;
 using MyCodeCamp.Filters;
 using MyCodeCamp.Models;
+using Microsoft.Extensions.Caching.Memory;
+using System.Net;
 
 namespace MyCodeCamp.Controllers
 {
@@ -19,12 +21,14 @@ namespace MyCodeCamp.Controllers
         private ILogger<TalksController> _logger;
         private IMapper _mapper;
         private ICampRepository _repo;
+        private IMemoryCache _cache;
 
-        public TalksController(ICampRepository repo, ILogger<TalksController> logger, IMapper mapper)
+        public TalksController(ICampRepository repo, ILogger<TalksController> logger, IMapper mapper, IMemoryCache cache)
         {
             _repo = repo;
             _logger = logger;
             _mapper = mapper;
+            _cache = cache;
         }
 
         [HttpGet]
@@ -40,9 +44,22 @@ namespace MyCodeCamp.Controllers
         [HttpGet("{id}", Name = "GetTalk")]
         public IActionResult Get(int campId, int speakerId, int id)
         {
+            if (Request.Headers.ContainsKey("If-None-Match"))
+            {
+                var oldETag = Request.Headers["If-None-Match"].First();
+                if (_cache.Get($"Talk-{id}-{oldETag}") != null)
+                {
+                    return StatusCode((int) HttpStatusCode.NotModified);
+                }
+            }
+
             var talk = _repo.GetTalk(id);
 
             if (talk.Speaker.Id != speakerId || talk.Speaker.Camp.Id != campId) return BadRequest("Invalid talk for the speaker selected");
+
+            var etag = Convert.ToBase64String(talk.RowVersion);
+            Response.Headers.Add("ETag", etag);
+            _cache.Set($"Talk-{talk.Id}-{etag}", talk);
 
             return Ok(_mapper.Map<TalkModel>(talk));
         }
