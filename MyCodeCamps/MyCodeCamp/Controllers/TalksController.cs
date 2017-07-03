@@ -48,18 +48,14 @@ namespace MyCodeCamp.Controllers
             {
                 var oldETag = Request.Headers["If-None-Match"].First();
                 if (_cache.Get($"Talk-{id}-{oldETag}") != null)
-                {
                     return StatusCode((int) HttpStatusCode.NotModified);
-                }
             }
 
             var talk = _repo.GetTalk(id);
 
             if (talk.Speaker.Id != speakerId || talk.Speaker.Camp.Id != campId) return BadRequest("Invalid talk for the speaker selected");
 
-            var etag = Convert.ToBase64String(talk.RowVersion);
-            Response.Headers.Add("ETag", etag);
-            _cache.Set($"Talk-{talk.Id}-{etag}", talk);
+            AddEtag(talk);
 
             return Ok(_mapper.Map<TalkModel>(talk));
         }
@@ -79,6 +75,7 @@ namespace MyCodeCamp.Controllers
 
                     if (await _repo.SaveAllAsync())
                     {
+                        AddEtag(talk);
                         return Created(Url.Link("GetTalk", new { campId = campId, speakerId = speakerId, id = talk.Id }), _mapper.Map<TalkModel>(talk));
                     }
                 }
@@ -86,7 +83,6 @@ namespace MyCodeCamp.Controllers
             }
             catch (Exception ex)
             {
-
                 _logger.LogError($"Failed to save new talk: {ex}");
             }
 
@@ -101,17 +97,24 @@ namespace MyCodeCamp.Controllers
                 var talk = _repo.GetTalk(id);
                 if (talk == null) return NotFound();
 
+                if (Request.Headers.ContainsKey("If-Match"))
+                {
+                    var etag = Request.Headers["If-Match"].First();
+                    if (etag != Convert.ToBase64String(talk.RowVersion))
+                        return StatusCode((int) HttpStatusCode.PreconditionFailed);
+                }
+
                 _mapper.Map(model, talk);
 
                 if (await _repo.SaveAllAsync())
                 {
+                    AddEtag(talk);
                     return Ok(_mapper.Map<TalkModel>(talk));
                 }
 
             }
             catch (Exception ex)
             {
-
                 _logger.LogError($"Failed to update talk: {ex}");
             }
 
@@ -126,22 +129,31 @@ namespace MyCodeCamp.Controllers
                 var talk = _repo.GetTalk(id);
                 if (talk == null) return NotFound();
 
+                if (Request.Headers.ContainsKey("If-Match"))
+                {
+                    var etag = Request.Headers["If-Match"].First();
+                    if (etag != Convert.ToBase64String(talk.RowVersion))
+                        return StatusCode((int)HttpStatusCode.PreconditionFailed);
+                }
+
                 _repo.Delete(talk);
 
                 if (await _repo.SaveAllAsync())
-                {
                     return Ok();
-                }
-
             }
             catch (Exception ex)
             {
-
                 _logger.LogError($"Failed to delete talk: {ex}");
             }
 
             return BadRequest("Failed to delete talk");
         }
-
+        
+        private void AddEtag(Talk talk)
+        {
+            var etag = Convert.ToBase64String(talk.RowVersion);
+            Response.Headers.Add("ETag", etag);
+            _cache.Set($"Talk-{talk.Id}-{etag}", talk);
+        }
     }
 }
