@@ -79,7 +79,6 @@ namespace MyCodeCamp.Controllers
                         return Created(Url.Link("GetTalk", new { campId = campId, speakerId = speakerId, id = talk.Id }), _mapper.Map<TalkModel>(talk));
                     }
                 }
-
             }
             catch (Exception ex)
             {
@@ -111,7 +110,6 @@ namespace MyCodeCamp.Controllers
                     AddEtag(talk);
                     return Ok(_mapper.Map<TalkModel>(talk));
                 }
-
             }
             catch (Exception ex)
             {
