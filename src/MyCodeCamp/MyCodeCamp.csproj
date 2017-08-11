@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <UserSecretsId>aspnet-MyCodeCamp-EE832422-C9FE-4B55-B185-50187AA80F22</UserSecretsId>
+    <StartupObject>MyCodeCamp.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
